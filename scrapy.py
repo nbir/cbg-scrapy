@@ -105,6 +105,7 @@ class ScraperState(object):
         self.total_received = 0
         self.rate = 0
         log.msg("Create new scraper %r" % self)
+        log.msg("New scraper filter %r" % json.dumps(filter))
 
     def last_receiveds(self):
         if self.last_received:
@@ -151,10 +152,13 @@ class ScraperState(object):
         self.connector = connect_api(self.factory)
 
     def add_tweet(self, tweet):
-        self.received += 1
-        self.total_received += 1
-        self.cache.append((self.token.key, self.filter_id, tweet))
-        self.last_received = datetime.datetime.now()
+        user_id = str(tweet["user"]["id"])
+        if "follow" not in self.filter \
+        or user_id in self.filter.get("follow", []):
+            self.received += 1
+            self.total_received += 1
+            self.cache.append((self.token.key, self.filter_id, tweet))
+            self.last_received = datetime.datetime.now()
 
     def add_limit(self, limit):
         limit_value = 0
@@ -192,10 +196,15 @@ class ScrapyAPI(resource.Resource):
                 key=param["oauth"]["token"],
                 secret=param["oauth"]["secret"]
             )
-            location = tuple(param["filter"]["location"])
+            location = tuple(param["filter"].get("location", []))
+            track = tuple(param["filter"].get("track", []))
+            follow = tuple(param["filter"].get("follow", []))
             name = param["name"]
             if token.key not in self.scrapers:
-                flt = dict(location=location, id=param["filter"]["id"])
+                flt = dict(id=param["filter"]["id"])
+                if len(location) > 0: flt["location"] = location
+                if len(track) > 0: flt["track"] = track
+                if len(follow) > 0: flt["follow"] = follow
                 new_scraper = ScraperState(name, token, flt, self.cache)
                 self.scrapers[token.key] = new_scraper
                 new_scraper.connect(self.consumer)
