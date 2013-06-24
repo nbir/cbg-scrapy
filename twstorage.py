@@ -18,15 +18,15 @@ global SQL_MOVE
 SQL_MOVE = \
 """
 BEGIN WORK;
-LOCK TABLE t2_tmp_tweet IN SHARE ROW EXCLUSIVE MODE;
-UPDATE t2_tmp_tweet SET status=1 WHERE STATUS=0;
-INSERT INTO t2_tweet (
+LOCK TABLE nba_tmp_tweet IN SHARE ROW EXCLUSIVE MODE;
+UPDATE nba_tmp_tweet SET status=1 WHERE STATUS=0;
+INSERT INTO nba_tweet (
     SELECT id, user_id, timestamp, text, geo 
-    FROM t2_tmp_tweet
+    FROM nba_tmp_tweet
     WHERE status = 1
 );
-UPDATE t2_tmp_tweet SET status=2 WHERE STATUS=1;
-DELETE FROM t2_tmp_tweet WHERE status=2 and timestamp < current_date - interval '7 days';
+UPDATE nba_tmp_tweet SET status=2 WHERE STATUS=1;
+DELETE FROM nba_tmp_tweet WHERE status=2 and timestamp < current_date - interval '7 days';
 COMMIT WORK;
 """
 
