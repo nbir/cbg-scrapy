@@ -280,8 +280,7 @@ class ScrapyAPI(resource.Resource):
                 })
 
         except Exception:
-            #log.msg("Error: %s" % traceback.format_exc(),
-                    logLevel=logging.WARNING)
+            #log.msg("Error: %s" % traceback.format_exc(),logLevel=logging.WARNING)
             return json.dumps({
                 "error": True,
                 "message": traceback.format_exc(),
