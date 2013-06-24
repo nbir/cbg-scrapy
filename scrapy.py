@@ -249,7 +249,7 @@ class ScrapyAPI(resource.Resource):
 
     def render_GET(self, request):
         try:
-            log.msg("Handle request: %s" % request.path, logLevel=logging.DEBUG)
+            #log.msg("Handle request: %s" % request.path, logLevel=logging.DEBUG)
             request.setHeader("Content-Type", "application/json")
 
             if request.path == "/add/":
@@ -273,15 +273,14 @@ class ScrapyAPI(resource.Resource):
                 logfile.close()
                 return log_message
             else:
-                log.msg("Wrong API path '%s'" % request.path,
-                        logLevel=logging.DEBUG)
+                #log.msg("Wrong API path '%s'" % request.path,logLevel=logging.DEBUG)
                 return json.dumps({
                     "error": True,
                     "message": "Wrong API path '%s'" % request.path,
                 })
 
         except Exception:
-            log.msg("Error: %s" % traceback.format_exc(),
+            #log.msg("Error: %s" % traceback.format_exc(),
                     logLevel=logging.WARNING)
             return json.dumps({
                 "error": True,
