@@ -76,6 +76,7 @@ else:
         print "The request for a Token did not succeed: %s" % resp["status"]
         print access_token
     else:
-        print "Your Twitter Access Token key: %s" % access_token["oauth_token"]
-        print "          Access Token secret: %s" % access_token["oauth_token_secret"]
+        #print "Your Twitter Access Token key: %s" % access_token["oauth_token"]
+        #print "          Access Token secret: %s" % access_token["oauth_token_secret"]
+        print access_token["oauth_token"] + ',' + access_token["oauth_token_secret"]
         print ""
